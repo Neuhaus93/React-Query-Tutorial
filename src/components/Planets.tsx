@@ -1,19 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useQuery} from 'react-query';
 import {fetchPlanets, PlanetProps} from '../api';
 import Planet from './Planet';
 
 interface PlanetsData {
   results: PlanetProps[];
+  previous?: string;
+  next?: string;
 }
 
 const Planets: React.FC = () => {
   const [page, setPage] = useState(1);
-
-  useEffect(() => {
-    console.log(page);
-  }, [page]);
-
   const {data, status} = useQuery<PlanetsData>(['planets', page], () =>
     fetchPlanets(page)
   );
@@ -22,19 +19,30 @@ const Planets: React.FC = () => {
     <div>
       <h2>Planets</h2>
 
-      <button onClick={() => setPage(1)}>page 1</button>
-      <button onClick={() => setPage(2)}>page 2</button>
-      <button onClick={() => setPage(3)}>page 3</button>
-
       {status === 'loading' && <div>Loading data...</div>}
       {status === 'error' && <div>Error fetching data</div>}
 
       {status === 'success' && (
-        <div>
-          {data!.results.map((planet) => (
-            <Planet key={planet.name} planet={planet} />
-          ))}
-        </div>
+        <>
+          <button
+            onClick={() => setPage((cur) => Math.max(cur - 1, 1))}
+            disabled={page === 1}>
+            Previous page
+          </button>
+          <span>{page}</span>
+          <button
+            onClick={() =>
+              setPage((old) => (!data || !data.next ? old : old + 1))
+            }
+            disabled={!data || !data.next}>
+            Next page
+          </button>
+          <div>
+            {data!.results.map((planet) => (
+              <Planet key={planet.name} planet={planet} />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
