@@ -10,8 +10,8 @@ export interface PersonProps {
   birth_year: string;
 }
 
-export const fetchPlanets = async () => {
-  const res = await fetch('http://swapi.dev/api/planets/');
+export const fetchPlanets = async (page: number) => {
+  const res = await fetch(`http://swapi.dev/api/planets/?page=${page}`);
 
   return res.json();
 };
