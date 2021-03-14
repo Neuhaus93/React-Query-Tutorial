@@ -8,7 +8,9 @@ interface PlanetsData {
 }
 
 const Planets: React.FC = () => {
-  const {data, status} = useQuery<PlanetsData>('planets', fetchPlanets);
+  const {data, status} = useQuery<PlanetsData>('planets', fetchPlanets, {
+    staleTime: 3000,
+  });
 
   return (
     <div>

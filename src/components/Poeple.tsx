@@ -8,7 +8,9 @@ interface PeopleData {
 }
 
 const People: React.FC = () => {
-  const {data, isLoading, error} = useQuery<PeopleData>('people', fetchPeople);
+  const {data, isLoading, error} = useQuery<PeopleData>('people', fetchPeople, {
+    staleTime: 3000,
+  });
 
   if (isLoading) {
     return <div>'Loading...'</div>;
